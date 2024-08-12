@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const crypto = require('crypto');
 const bcrypt = require("bcryptjs");
-const nodemailer = require('nodemailer');
+const transporter = require('../utils/transport');
 const generateTokenAndSetCookie = require("../utils/generateToken");
 
 const login = async(req,res) =>{
@@ -89,16 +89,6 @@ const logout = async(req,res) =>{
     }
 };
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
-
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -135,8 +125,9 @@ const forgotPassword = async (req, res) => {
                 console.error('Error sending email: ', err);
                 return res.status(500).send('Error sending email');
             }
-            res.json({ message: 'Email sent', resetToken});
+            res.status(200).json({ message: 'Email sent', resetToken});
         });
+
     } catch (error) {
         console.log("Error in forgotPassword controller", error.message);
         res.status(500).json({ error: "Internal Server Error" });
