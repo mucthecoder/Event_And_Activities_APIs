@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+</head>
+<body>
+    <header>
+        <h1>API Documentation</h1>
+        <p>Learn how to use our authentication API</p>
+    </header>
+
+    <main>
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>This API provides authentication functionalities including signup, login, logout, password reset, and more.</p>
+        </section>
+
+        <section id="endpoints">
+            <h2>Endpoints</h2>
+
+            <article id="signup">
+                <h3>Signup</h3>
+                <p><strong>URL:</strong> /api/auth/signup</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Create a new user account.</p>
+                <pre><code>{
+    "fullname": "string",
+    "email": "string",
+    "password": "string",
+    "role": "string" (optional, default: "user")
+}</code></pre>
+                <button onclick="tryEndpoint('/api/auth/signup')">Try It</button>
+            </article>
+
+            <article id="login">
+                <h3>Login</h3>
+                <p><strong>URL:</strong> /api/auth/login</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Authenticate a user and retrieve a token.</p>
+                <pre><code>{
+    "email": "string",
+    "password": "string"
+}</code></pre>
+                <button onclick="tryEndpoint('/api/auth/login')">Try It</button>
+            </article>
+
+            <article id="logout">
+                <h3>Logout</h3>
+                <p><strong>URL:</strong> /api/auth/logout</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Logout the user.</p>
+                <button onclick="tryEndpoint('/api/auth/logout')">Try It</button>
+            </article>
+
+            <article id="forgot-password">
+                <h3>Forgot Password</h3>
+                <p><strong>URL:</strong> /api/auth/forgot-password</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Send a password reset link to the user's email.</p>
+                <pre><code>{
+    "email": "string"
+}</code></pre>
+                <button onclick="tryEndpoint('/api/auth/forgot-password')">Try It</button>
+            </article>
+
+            <article id="reset-password">
+                <h3>Reset Password</h3>
+                <p><strong>URL:</strong> /api/auth/reset-password/:token</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Validate a password reset token.</p>
+                <pre><code>{
+    "token": "string"
+}</code></pre>
+                <button onclick="tryEndpoint('/api/auth/reset-password/TOKEN_HERE')">Try It</button>
+            </article>
+
+            <article id="set-new-password">
+                <h3>Set New Password</h3>
+                <p><strong>URL:</strong> /api/auth/set-new-password</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Set a new password for the user.</p>
+                <pre><code>{
+    "userId": "string",
+    "newPassword": "string"
+}</code></pre>
+                <button onclick="tryEndpoint('/api/auth/set-new-password')">Try It</button>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 API Documentation. All rights reserved.</p>
+    </footer>
+
+    <script src="javascripts/scripts.js"></script>
+</body>
+</html>
