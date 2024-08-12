@@ -1,22 +1,23 @@
 const User = require("../models/user.model");
-const jwt = require("jsonwebtoken");
+const crypto = require('crypto');
 const bcrypt = require("bcryptjs");
+const nodemailer = require('nodemailer');
 const generateTokenAndSetCookie = require("../utils/generateToken");
 
 const login = async(req,res) =>{
     try {
         const {email,password} = req.body;
-        // Validate input data
+
         if (!email || !password ) {
             return res.status(400).json({ error: "All details are required" });
         }
 
-        const findUser = await User.findOne({email});
+        const findUser = await User.findOne({ email });
 
         const isPasswordCorrect = await bcrypt.compare(password,findUser?.password || "");
 
         if(!findUser || !isPasswordCorrect){
-            return res.status(400).json({error:"Invalid username or password"});
+            return res.status(400).json({error:"Invalid email or password"});
         }
 
         const token = generateTokenAndSetCookie(findUser._id,res);
@@ -45,8 +46,8 @@ const signup = async (req, res) => {
             role = "user";
         }
 
-        const existingUserByUsername = await User.findOne({ email });
-        if (existingUserByUsername) {
+        const existingUserByEmail = await User.findOne({ email });
+        if (existingUserByEmail) {
             return res.status(400).json({ error: "email is already registered" });
         }
         // Hash the password
@@ -87,6 +88,16 @@ const logout = async(req,res) =>{
         res.status(500).json({error:"Internal Server Error"});
     }
 };
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
 
 const forgotPassword = async (req, res) => {
     try {
