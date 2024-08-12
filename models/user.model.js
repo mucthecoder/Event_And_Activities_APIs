@@ -16,11 +16,21 @@ const userSchema = new Schema({
         type: String,
         // required: true
     },
+    authId: {
+        type: String,
+        // required: true
+    },
     role: {
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
     },
+    
+    get_notified: {
+      type: Boolean, 
+      default: true 
+    },
+    
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     createdAt: {
