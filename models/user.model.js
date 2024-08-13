@@ -25,7 +25,6 @@ const userSchema = new Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
-    
     get_notified: {
       type: Boolean, 
       default: true 
