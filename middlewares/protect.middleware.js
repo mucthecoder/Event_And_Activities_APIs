@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 
-const protectRoute = async(req,res,next)=>{
+const authenticate = async(req,res,next)=>{
     try {
         const token = req.cookies.jwt; // needs cookie parser
         if(!token){
@@ -14,7 +14,7 @@ const protectRoute = async(req,res,next)=>{
         }
 
 
-        const user = await User.findById(decoded.userId).select("-password"); //it is called userId because of jwt.sign(*{userId}*
+        const user = await User.findById(decoded.userId); //it is called userId because of jwt.sign(*{userId}*
         if(!user){
             return res.status(401).json({error:"User not found"});
         }
@@ -29,5 +29,5 @@ const protectRoute = async(req,res,next)=>{
 }
 
 module.exports = {
-    protectRoute
+    authenticate
 }
