@@ -17,11 +17,11 @@ const ticketRegistrationSchema = new Schema({
         enum: ['rsvp', 'ticket'],
         required: true
     },
-    // ticket_number: { //
-    //     type: String,
-    //     unique: true,
-    //     sparse: true
-    // },
+    ticket_number: { //
+        type: String,
+        unique: true,
+        sparse: true
+    },
     issue_date: {
         type: Date,
         default: Date.now
@@ -50,8 +50,8 @@ const ticketRegistrationSchema = new Schema({
     },
     refund_status: {
         type: String,
-        enum: ['pending', 'approved', 'rejected'],
-        default: 'pending'
+        enum: ['not requested','pending', 'approved', 'rejected'],
+        default: 'not requested'
     },
     expiration_date: {
         type: Date,

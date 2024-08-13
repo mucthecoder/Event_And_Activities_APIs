@@ -46,6 +46,12 @@ const signup = async (req, res) => {
             role = "user";
         }
 
+        const type_of_users = ['user', 'admin'];
+
+        if (!type_of_users.includes(role)) {
+            return res.status(400).json({ error: "undefined user type" });
+        }
+
         const existingUserByEmail = await User.findOne({ email });
         if (existingUserByEmail) {
             return res.status(400).json({ error: "email is already registered" });
@@ -108,7 +114,7 @@ const forgotPassword = async (req, res) => {
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
         await user.save();
 
-        const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+        const resetUrl = `http://localhost:3000/api/auth/reset-password/${resetToken}`;
 
         const mailOptions = {
             to: user.email,

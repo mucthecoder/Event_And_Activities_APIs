@@ -25,12 +25,12 @@ const eventSchema = new Schema({
   },
 
   start_time: { 
-    type: Date, 
+    type: String, 
     required: true 
   },
 
   end_time: { 
-    type: Date, 
+    type: String, 
     required: true 
   },
 
