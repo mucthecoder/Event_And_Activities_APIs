@@ -40,7 +40,7 @@ router.get('/tickets', function(req, res, next) {
     if (!username){
         return res.status(400).json({ error: "User not found" });
     }
-    const ticket = await tickets.findOne({})
+    
 
 });
 
