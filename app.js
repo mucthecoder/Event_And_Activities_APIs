@@ -7,7 +7,7 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth.route');
 const userRouter = require('./routes/user.route');
 const eventRouter = require('./routes/event.route');
-var ticketRouter = require('./routes/auth.tickets');
+var ticketRouter = require('./routes/tickets');
 
 const app = express();
 
