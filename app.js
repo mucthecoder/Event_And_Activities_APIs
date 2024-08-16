@@ -10,8 +10,12 @@ const eventRouter = require('./routes/event.route');
 var ticketRouter = require('./routes/tickets');
 
 const app = express();
-const cors = require('cors');
-app.use(cors());
+const cors = require('cors'); //Setup CORS
+
+app.use(cors({
+    origin: '*',
+    allowedHeaders: 'X-Requested-With, Content-Type, auth-token',
+}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
