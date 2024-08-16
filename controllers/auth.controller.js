@@ -107,23 +107,35 @@ const forgotPassword = async (req, res) => {
             return res.status(400).json({ error: "User not found" });
         }
 
-        const resetToken = crypto.randomBytes(32).toString("hex");
+        const resetToken = Math.floor(1000 + Math.random() * 9000);
         const hash = await bcrypt.hash(resetToken, 10);
 
         user.resetPasswordToken = hash;
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
         await user.save();
 
-        const resetUrl = `http://localhost:3000/api/auth/reset-password/${resetToken}`;
-
         const mailOptions = {
             to: user.email,
             from: process.env.EMAIL_USER,
-            subject: 'Password Reset',
-            text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n` +
-                  `Please click on the following link, or paste this into your browser to complete the process:\n\n` +
-                  `${resetUrl}\n\n` +
-                  `If you did not request this, please ignore this email and your password will remain unchanged.\n`
+            subject: 'Password Reset Request',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+                    <h2 style="color: #007bff; text-align: center;">Password Reset Request</h2>
+                    <p>Dear ${user.fullname || 'User'},</p>
+                    <p>You are receiving this email because you (or someone else) requested a password reset for your account.</p>
+                    <p>Please use the following 4-digit code to reset your password:</p>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <span style="font-size: 24px; font-weight: bold; background-color: #f8f9fa; padding: 10px 20px; border: 1px solid #007bff; border-radius: 5px; color: #007bff;">
+                            ${resetToken}
+                        </span>
+                    </div>
+                    <p>This code is valid for 1 hour. If you did not request a password reset, please ignore this email, and your password will remain unchanged.</p>
+                    <p style="margin-top: 30px;">Best regards,</p>
+                    <p><strong>Your Company Name</strong></p>
+                    <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+                    <p style="font-size: 12px; color: #999;">If you did not request this email, please contact our support team immediately.</p>
+                </div>
+            `,
         };
 
         transporter.sendMail(mailOptions, (err, info) => {
@@ -142,25 +154,27 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
     try {
-        const { token } = req.params;
-        if (!token) {
-            return res.status(400).json({ error: "Token is required" });
+        const { resetToken } = req.params;
+        const { email } = req.body;
+        if (!resetToken) {
+            return res.status(400).json({ error: "reset Token is required" });
         }
 
         const user = await User.findOne({
+            email,
             resetPasswordExpires: { $gt: Date.now() }
         });
 
         if (!user) {
-            return res.status(400).json({ error: "Invalid or expired token" });
+            return res.status(400).json({ error: "Invalid or expired resetToken" });
         }
 
-        const isMatch = await bcrypt.compare(token, user.resetPasswordToken);
+        const isMatch = await bcrypt.compare(resetToken, user.resetPasswordToken);
         if (!isMatch) {
-            return res.status(400).json({ error: "Invalid or expired token" });
+            return res.status(400).json({ error: "Invalid or expired reset Token" });
         }
 
-        res.status(200).json({ message: "Valid token", userId: user._id });
+        res.status(200).json({ message: "Valid reset token", userId: user._id });
     } catch (error) {
         console.log("Error in resetPassword controller", error.message);
         res.status(500).json({ error: "Internal Server Error" });
