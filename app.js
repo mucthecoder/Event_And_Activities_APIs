@@ -11,11 +11,15 @@ var ticketRouter = require('./routes/tickets');
 
 const app = express();
 const cors = require('cors');
-app.use(cors({
-    origin: '*', // or specify the exact origin of your Flutter app
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Authorization',
-}));
+//app.use(cors());
+    app.use(function (req, res, next) {
+    //Enabling CORS
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, 
+    Accept, x-client-key, x-client-token, x-client-secret, Authorization");
+      next();
+    });
 
 app.use(logger('dev'));
 app.use(express.json());
