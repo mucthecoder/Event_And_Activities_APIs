@@ -4,7 +4,6 @@
 name: Build and deploy Node.js app to Azure Web App - events1
 
 on:
-  
   push:
     branches:
       - main
@@ -69,4 +68,3 @@ jobs:
           app-name: 'events1'
           slot-name: 'Production'
           package: .
-          
