@@ -183,6 +183,10 @@ const TicketReg = async(req, res) => {
         const event = await Event.findById(event_id);
         const user = await User.findById(user_id);
 
+        if (event.current_attendees >= event.max_capacity) {
+            return res.status(400).json({ message: 'Event is at full capacity' });
+        }
+        
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
